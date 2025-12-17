@@ -8,6 +8,7 @@ import {
   DatePicker,
   InputNumber,
   Form, // 导入 Form 组件
+  Modal, // 导入 Modal 组件
 } from "antd";
 import { useState } from "react";
 import { TodoItem } from "../types";
@@ -15,7 +16,7 @@ import moment from "moment";
 
 export default (props: { addTodo: (newTodo: TodoItem) => void }) => {
   const [form] = Form.useForm(); // 使用 Form 的 useForm 钩子
-
+  const [visible, setVisible] = useState(false);
   const onFinish = (values: any) => {
     if (values.title) {
       props.addTodo({
@@ -27,12 +28,28 @@ export default (props: { addTodo: (newTodo: TodoItem) => void }) => {
         deadline: values.deadline ? values.deadline.toDate() : undefined,
       });
       form.resetFields(); // 提交后清空表单
+      setVisible(false);
     }
   };
 
   return (
     <>
-      <Card title="添加一个待办" className="w-full max-w-md mb-6">
+      <Button
+        type="primary"
+        onClick={() => setVisible(true)}
+        icon={<PlusOutlined />}
+      />
+      <Modal
+        title="编辑待办"
+        open={visible}
+        width={600}
+        onCancel={() => setVisible(false)}
+        onOk={() => {
+          form.submit();
+          setVisible(false);
+        }}
+        footer={null} // 隐藏默认的按钮
+      >
         <Form
           form={form}
           onFinish={onFinish}
@@ -94,7 +111,7 @@ export default (props: { addTodo: (newTodo: TodoItem) => void }) => {
             </Button>
           </Form.Item>
         </Form>
-      </Card>
+      </Modal>
     </>
   );
 };

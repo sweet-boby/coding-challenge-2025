@@ -13,10 +13,11 @@ export default (props: {
   deleteTodo: (id: number) => void;
   sortOrder: "priority" | "deadline" | null; // 新增
   setSortOrder: (order: "priority" | "deadline" | null) => void; // 新增
+  extra?: any;
 }) => {
   return (
     <>
-      <Card title="我的待办" className="w-full max-w-md">
+      <Card extra={props.extra} title="我的待办" className="w-full max-w-md">
         <Space className="mb-4" vertical>
           <div>
             <Text>按标签过滤：</Text>
