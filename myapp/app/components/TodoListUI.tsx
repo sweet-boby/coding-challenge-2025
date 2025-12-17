@@ -1,5 +1,5 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Typography } from "antd";
+import { Button, Card, Checkbox, Typography, Tag, Space } from "antd"; // 导入 Tag 和 Space
 import { TodoItem } from "../types";
 const { Text } = Typography;
 export default (props: {
@@ -41,6 +41,15 @@ export default (props: {
                       >
                         {todo.description}
                       </Text>
+                    )}
+                    {todo.tags && todo.tags.length > 0 && (
+                      <Space size={[0, 8]} wrap className="mt-2">
+                        {todo.tags.map((tag, index) => (
+                          <Tag key={index} color="blue">
+                            {tag}
+                          </Tag>
+                        ))}
+                      </Space>
                     )}
                   </div>
                 </div>
