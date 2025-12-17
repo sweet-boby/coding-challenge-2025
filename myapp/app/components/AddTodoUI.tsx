@@ -1,10 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Input, Space } from "antd";
 import { useState } from "react";
+import { TodoItem } from "../types";
 
-export default (props: {
-  addTodo: (newTodoTitle: string, newTodoDescription: string) => void;
-}) => {
+export default (props: { addTodo: (newTodo: TodoItem) => void }) => {
   const [newTodoTitle, setNewTodoTitle] = useState("");
   const [newTodoDescription, setNewTodoDescription] = useState("");
   return (
@@ -25,8 +24,13 @@ export default (props: {
           <Button
             type="primary"
             onClick={() => {
-              props.addTodo(newTodoTitle, newTodoDescription);
               if (newTodoTitle) {
+                props.addTodo({
+                  id: Date.now(),
+                  title: newTodoTitle,
+                  description: newTodoDescription,
+                  completed: false,
+                });
                 setNewTodoTitle("");
                 setNewTodoDescription("");
               }

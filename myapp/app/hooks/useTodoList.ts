@@ -3,14 +3,8 @@ import { TodoItem } from "../types";
 export default () => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
 
-  const addTodo = (newTodoTitle: string, newTodoDescription: string) => {
-    if (newTodoTitle.trim() === "") return;
-    const newTodo: TodoItem = {
-      id: Date.now(),
-      title: newTodoTitle,
-      description: newTodoDescription,
-      completed: false,
-    };
+  const addTodo = (newTodo: TodoItem) => {
+    if (newTodo.title.trim() === "") return;
     setTodos([...todos, newTodo]);
   };
 
