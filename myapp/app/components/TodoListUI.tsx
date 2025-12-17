@@ -1,8 +1,9 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Card, Checkbox, Typography } from "antd";
+import { TodoItem } from "../types";
 const { Text } = Typography;
 export default (props: {
-  todos: any[];
+  todos: TodoItem[];
   toggleComplete: (id: number) => void;
   deleteTodo: (id: number) => void;
 }) => {

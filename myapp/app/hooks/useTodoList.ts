@@ -1,12 +1,5 @@
 import { useState } from "react";
-
-interface TodoItem {
-  id: number;
-  title: string;
-  description?: string;
-  completed: boolean;
-}
-
+import { TodoItem } from "../types";
 export default () => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
 
