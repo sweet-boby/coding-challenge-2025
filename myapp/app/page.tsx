@@ -1,65 +1,121 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { Input, Button, Checkbox, Typography, Card, Space } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+
+const { Text } = Typography;
+
+interface TodoItem {
+  id: number;
+  title: string;
+  description?: string;
+  completed: boolean;
+}
 
 export default function Home() {
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [newTodoDescription, setNewTodoDescription] = useState("");
+
+  const addTodo = () => {
+    if (newTodoTitle.trim() === "") return;
+    const newTodo: TodoItem = {
+      id: Date.now(),
+      title: newTodoTitle,
+      description: newTodoDescription,
+      completed: false,
+    };
+    setTodos([...todos, newTodo]);
+    setNewTodoTitle("");
+    setNewTodoDescription("");
+  };
+
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const toggleComplete = (id: number) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">待办列表</h1>
+      <Card title="添加一个待办" className="w-full max-w-md mb-6">
+        <Space vertical className="w-full">
+          <Input
+            placeholder="待办标题"
+            value={newTodoTitle}
+            onChange={(e) => setNewTodoTitle(e.target.value)}
+          />
+          <Input.TextArea
+            placeholder="描述（可选）"
+            value={newTodoDescription}
+            onChange={(e) => setNewTodoDescription(e.target.value)}
+            autoSize={{ minRows: 2, maxRows: 6 }}
+          />
+          <Button
+            type="primary"
+            onClick={addTodo}
+            block
+            icon={<PlusOutlined />}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            Add Todo
+          </Button>
+        </Space>
+      </Card>
+
+      <Card title="我的待办" className="w-full max-w-md">
+        {todos.length === 0 ? (
+          <Text type="secondary">还没有待办事项。在上面添加一个!</Text>
+        ) : (
+          <ul className="list-none p-0 m-0">
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                className="flex items-center justify-between py-3 border-b last:border-b-0"
+              >
+                <div className="flex items-center">
+                  <Checkbox
+                    checked={todo.completed}
+                    onChange={() => toggleComplete(todo.id)}
+                    className="mr-3"
+                  />
+                  <div>
+                    <Text
+                      delete={todo.completed}
+                      strong={!todo.completed}
+                      className={todo.completed ? "text-gray-500" : ""}
+                    >
+                      {todo.title}
+                    </Text>
+                    {todo.description && (
+                      <Text
+                        delete={todo.completed}
+                        type="secondary"
+                        className="block text-sm"
+                      >
+                        {todo.description}
+                      </Text>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => deleteTodo(todo.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
     </div>
   );
 }
