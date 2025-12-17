@@ -2,6 +2,8 @@
 import { Button, Card, Checkbox, Typography, Tag, Space, Select } from "antd";
 import { TodoItem } from "../types";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { Flex, Radio } from "antd";
 const { Text } = Typography;
 export default (props: {
   todos: TodoItem[];
@@ -15,6 +17,9 @@ export default (props: {
   setSortOrder: (order: "priority" | "deadline" | null) => void; // 新增
   extra?: any;
 }) => {
+  const [filterCompleted, setFilterCompleted] = useState<
+    "all" | "completed" | "incompleted"
+  >("all");
   return (
     <>
       <Card extra={props.extra} title="我的待办" className="w-full max-w-md">
@@ -52,70 +57,90 @@ export default (props: {
               style={{ width: 120 }}
             />
           </div>
+          <div>
+            <Text>完成状态：</Text>
+            <Radio.Group
+              value={filterCompleted}
+              onChange={(e) => setFilterCompleted(e.target.value)}
+            >
+              <Radio value="all">全部</Radio>
+              <Radio value="completed">已完成</Radio>
+              <Radio value="incompleted">未完成</Radio>
+            </Radio.Group>
+          </div>
         </Space>
         <div>
           {props.filteredTodos.length === 0 ? (
             <Text type="secondary">还没有待办事项。在上面添加一个!</Text>
           ) : (
             <ul className="list-none p-0 m-0">
-              {props.filteredTodos.map((todo) => (
-                <li
-                  key={todo.id}
-                  className="flex items-center justify-between py-3 border-b last:border-b-0"
-                >
-                  <div className="flex items-center">
-                    <Checkbox
-                      checked={todo.completed}
-                      onChange={() => props.toggleComplete(todo.id!)}
-                      className="mr-5"
-                    />
-                    <div className="pl-3">
-                      <Text
-                        delete={todo.completed}
-                        strong={!todo.completed}
-                        className={todo.completed ? "text-gray-500" : ""}
-                      >
-                        {todo.title}
-                      </Text>
-                      {todo.description && (
+              {props.filteredTodos
+                .filter((i) => {
+                  if (filterCompleted === "completed") {
+                    return i.completed;
+                  } else if (filterCompleted === "incompleted") {
+                    return !i.completed;
+                  }
+                  return true;
+                })
+                .map((todo) => (
+                  <li
+                    key={todo.id}
+                    className="flex items-center justify-between py-3 border-b last:border-b-0"
+                  >
+                    <div className="flex items-center">
+                      <Checkbox
+                        checked={todo.completed}
+                        onChange={() => props.toggleComplete(todo.id!)}
+                        className="mr-5"
+                      />
+                      <div className="pl-3">
                         <Text
                           delete={todo.completed}
-                          type="secondary"
-                          className="block text-sm"
+                          strong={!todo.completed}
+                          className={todo.completed ? "text-gray-500" : ""}
                         >
-                          {todo.description}
+                          {todo.title}
                         </Text>
-                      )}
-                      {todo.tags && todo.tags.length > 0 && (
-                        <Space size={[0, 8]} wrap className="mt-2">
-                          {todo.tags.map((tag, index) => (
-                            <Tag key={index} color="blue">
-                              {tag}
-                            </Tag>
-                          ))}
-                        </Space>
-                      )}
-                      {todo.priority && (
-                        <Text type="secondary" className="block text-sm">
-                          优先级: {todo.priority}
-                        </Text>
-                      )}
-                      {todo.deadline && (
-                        <Text type="secondary" className="block text-sm">
-                          截止日期:{" "}
-                          {new Date(todo.deadline).toLocaleDateString()}
-                        </Text>
-                      )}
+                        {todo.description && (
+                          <Text
+                            delete={todo.completed}
+                            type="secondary"
+                            className="block text-sm"
+                          >
+                            {todo.description}
+                          </Text>
+                        )}
+                        {todo.tags && todo.tags.length > 0 && (
+                          <Space size={[0, 8]} wrap className="mt-2">
+                            {todo.tags.map((tag, index) => (
+                              <Tag key={index} color="blue">
+                                {tag}
+                              </Tag>
+                            ))}
+                          </Space>
+                        )}
+                        {todo.priority && (
+                          <Text type="secondary" className="block text-sm">
+                            优先级: {todo.priority}
+                          </Text>
+                        )}
+                        {todo.deadline && (
+                          <Text type="secondary" className="block text-sm">
+                            截止日期:{" "}
+                            {new Date(todo.deadline).toLocaleDateString()}
+                          </Text>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <Button
-                    type="text"
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => props.deleteTodo(todo.id!)}
-                  />
-                </li>
-              ))}
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => props.deleteTodo(todo.id!)}
+                    />
+                  </li>
+                ))}
             </ul>
           )}
         </div>
