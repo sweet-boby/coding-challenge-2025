@@ -64,8 +64,8 @@ export default (props: {
               onChange={(e) => setFilterCompleted(e.target.value)}
             >
               <Radio value="all">全部</Radio>
-              <Radio value="completed">已完成</Radio>
               <Radio value="incompleted">未完成</Radio>
+              <Radio value="completed">已完成</Radio>
             </Radio.Group>
           </div>
         </Space>
