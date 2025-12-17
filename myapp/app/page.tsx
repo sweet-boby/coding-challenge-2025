@@ -5,7 +5,16 @@ import AddTodoUI from "./components/AddTodoUI";
 import useTodoList from "./hooks/useTodoList";
 
 export default function Home() {
-  const { todos, addTodo, toggleComplete, deleteTodo } = useTodoList();
+  const {
+    todos,
+    addTodo,
+    toggleComplete,
+    deleteTodo,
+    filteredTodos,
+    allTags,
+    selectedTag,
+    setSelectedTag,
+  } = useTodoList();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
@@ -13,6 +22,10 @@ export default function Home() {
       <AddTodoUI addTodo={addTodo} />
 
       <TodoListUI
+        selectedTag={selectedTag}
+        setSelectedTag={setSelectedTag}
+        filteredTodos={filteredTodos}
+        allTags={allTags}
         todos={todos}
         toggleComplete={toggleComplete}
         deleteTodo={deleteTodo}

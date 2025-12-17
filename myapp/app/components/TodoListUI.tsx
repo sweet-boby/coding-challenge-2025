@@ -1,20 +1,43 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Typography, Tag, Space } from "antd"; // 导入 Tag 和 Space
+import { Button, Card, Checkbox, Typography, Tag, Space, Select } from "antd"; // 导入 Tag 和 Space
 import { TodoItem } from "../types";
 const { Text } = Typography;
 export default (props: {
   todos: TodoItem[];
+  filteredTodos: TodoItem[];
+  allTags: string[];
+  selectedTag: string | null;
+  setSelectedTag: (tag: string | null) => void;
   toggleComplete: (id: number) => void;
   deleteTodo: (id: number) => void;
 }) => {
   return (
     <>
       <Card title="我的待办" className="w-full max-w-md">
-        {props.todos.length === 0 ? (
+        <Space className="mb-4">
+          <Text>按标签过滤：</Text>
+          <Select
+            placeholder="选择标签"
+            value={props.selectedTag}
+            onChange={(value) => props.setSelectedTag(value || null)}
+            options={[
+              {
+                label: "全部任务",
+                value: null,
+              },
+              ...props.allTags.map((tag) => ({
+                label: tag,
+                value: tag,
+              })),
+            ]}
+            style={{ width: 180 }}
+          />
+        </Space>
+        {props.filteredTodos.length === 0 ? (
           <Text type="secondary">还没有待办事项。在上面添加一个!</Text>
         ) : (
           <ul className="list-none p-0 m-0">
-            {props.todos.map((todo) => (
+            {props.filteredTodos.map((todo) => (
               <li
                 key={todo.id}
                 className="flex items-center justify-between py-3 border-b last:border-b-0"
