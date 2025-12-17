@@ -19,7 +19,6 @@ export default (props: { addTodo: (newTodo: TodoItem) => void }) => {
   const onFinish = (values: any) => {
     if (values.title) {
       props.addTodo({
-        id: Date.now(),
         title: values.title,
         description: values.description,
         completed: false,

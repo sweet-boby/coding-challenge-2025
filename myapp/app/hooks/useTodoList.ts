@@ -17,6 +17,7 @@ export default () => {
   useEffect(() => {
     const fetchTodos = async () => {
       const todos = await getAllTodos();
+      console.log(todos);
       setTodos(todos);
     };
     fetchTodos();
@@ -24,13 +25,15 @@ export default () => {
 
   const addTodo = (newTodo: TodoItem) => {
     if (newTodo.title.trim() === "") return;
-    setTodos([...todos, newTodo]);
-    addTodoItem(newTodo);
+    addTodoItem(newTodo).then((id) => {
+      setTodos([...todos, { ...newTodo, id }]);
+    });
   };
 
   const deleteTodo = (id: number) => {
-    deleteTodoItem(id);
-    setTodos(todos.filter((todo) => todo.id !== id));
+    deleteTodoItem(id).then(() => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    });
   };
 
   const toggleComplete = (id: number) => {
