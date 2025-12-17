@@ -27,7 +27,7 @@ export default (props: {
               options={[
                 {
                   label: "全部任务",
-                  value: null,
+                  value: "",
                 },
                 ...props.allTags.map((tag) => ({
                   label: tag,
@@ -65,7 +65,7 @@ export default (props: {
                   <div className="flex items-center">
                     <Checkbox
                       checked={todo.completed}
-                      onChange={() => props.toggleComplete(todo.id)}
+                      onChange={() => props.toggleComplete(todo.id!)}
                       className="mr-5"
                     />
                     <div className="pl-3">
@@ -111,7 +111,7 @@ export default (props: {
                     type="text"
                     danger
                     icon={<DeleteOutlined />}
-                    onClick={() => props.deleteTodo(todo.id)}
+                    onClick={() => props.deleteTodo(todo.id!)}
                   />
                 </li>
               ))}
