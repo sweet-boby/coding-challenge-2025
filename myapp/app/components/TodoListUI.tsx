@@ -1,6 +1,7 @@
-import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Typography, Tag, Space, Select } from "antd"; // 导入 Tag 和 Space
+// ... existing code ...
+import { Button, Card, Checkbox, Typography, Tag, Space, Select } from "antd";
 import { TodoItem } from "../types";
+import { DeleteOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 export default (props: {
   todos: TodoItem[];
@@ -10,28 +11,46 @@ export default (props: {
   setSelectedTag: (tag: string | null) => void;
   toggleComplete: (id: number) => void;
   deleteTodo: (id: number) => void;
+  sortOrder: "priority" | "deadline" | null; // 新增
+  setSortOrder: (order: "priority" | "deadline" | null) => void; // 新增
 }) => {
   return (
     <>
       <Card title="我的待办" className="w-full max-w-md">
         <Space className="mb-4">
-          <Text>按标签过滤：</Text>
-          <Select
-            placeholder="选择标签"
-            value={props.selectedTag}
-            onChange={(value) => props.setSelectedTag(value || null)}
-            options={[
-              {
-                label: "全部任务",
-                value: null,
-              },
-              ...props.allTags.map((tag) => ({
-                label: tag,
-                value: tag,
-              })),
-            ]}
-            style={{ width: 180 }}
-          />
+          <div>
+            <Text>按标签过滤：</Text>
+            <Select
+              placeholder="选择标签"
+              value={props.selectedTag}
+              onChange={(value) => props.setSelectedTag(value || null)}
+              options={[
+                {
+                  label: "全部任务",
+                  value: null,
+                },
+                ...props.allTags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                })),
+              ]}
+              style={{ width: 180 }}
+            />
+          </div>
+          <div>
+            <Text>排序：</Text>
+            <Select
+              placeholder="选择排序方式"
+              value={props.sortOrder}
+              onChange={(value) => props.setSortOrder(value)}
+              options={[
+                { label: "无", value: "" },
+                { label: "优先级", value: "priority" },
+                { label: "截止日期", value: "deadline" },
+              ]}
+              style={{ width: 120 }}
+            />
+          </div>
         </Space>
         {props.filteredTodos.length === 0 ? (
           <Text type="secondary">还没有待办事项。在上面添加一个!</Text>
@@ -73,6 +92,16 @@ export default (props: {
                           </Tag>
                         ))}
                       </Space>
+                    )}
+                    {todo.priority && (
+                      <Text type="secondary" className="block text-sm">
+                        优先级: {todo.priority}
+                      </Text>
+                    )}
+                    {todo.deadline && (
+                      <Text type="secondary" className="block text-sm">
+                        截止日期: {new Date(todo.deadline).toLocaleDateString()}
+                      </Text>
                     )}
                   </div>
                 </div>

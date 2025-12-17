@@ -14,6 +14,8 @@ export default function Home() {
     allTags,
     selectedTag,
     setSelectedTag,
+    sortOrder, // 新增
+    setSortOrder, // 新增
   } = useTodoList();
 
   return (
@@ -29,6 +31,8 @@ export default function Home() {
         todos={todos}
         toggleComplete={toggleComplete}
         deleteTodo={deleteTodo}
+        sortOrder={sortOrder} // 新增
+        setSortOrder={setSortOrder} // 新增
       />
     </div>
   );
