@@ -1,5 +1,14 @@
 // ... existing code ...
-import { Button, Card, Checkbox, Typography, Tag, Space, Select } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Typography,
+  Tag,
+  Space,
+  Select,
+  Input,
+} from "antd";
 import { TodoItem } from "../types";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -15,15 +24,30 @@ export default (props: {
   deleteTodo: (id: number) => void;
   sortOrder: "priority" | "deadline" | null; // 新增
   setSortOrder: (order: "priority" | "deadline" | null) => void; // 新增
+  searchTodo: (searchTerm: string) => void;
   extra?: any;
 }) => {
   const [filterCompleted, setFilterCompleted] = useState<
     "all" | "completed" | "incompleted"
   >("all");
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <>
       <Card extra={props.extra} title="我的待办" className="w-full max-w-md">
         <Space className="mb-4" vertical>
+          <div>
+            <Text>搜索：</Text>
+            <Input.Search
+              placeholder="搜索待办事项"
+              allowClear
+              enterButton
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onSearch={(value) => props.searchTodo(value)}
+              style={{ width: 200 }}
+            />
+          </div>
+
           <div>
             <Text>按标签过滤：</Text>
             <Select

@@ -16,6 +16,7 @@ export default function Home() {
     setSelectedTag,
     sortOrder, // 新增
     setSortOrder, // 新增
+    searchTodo,
   } = useTodoList();
 
   return (
@@ -23,6 +24,7 @@ export default function Home() {
       <h1 className="text-4xl font-bold text-gray-800 mb-8">待办列表</h1>
 
       <TodoListUI
+        searchTodo={searchTodo}
         extra={<AddTodoUI addTodo={addTodo} />}
         selectedTag={selectedTag}
         setSelectedTag={setSelectedTag}

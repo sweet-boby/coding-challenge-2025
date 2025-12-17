@@ -5,6 +5,7 @@ import {
   getAllTodos,
   deleteTodoItem,
   toggleTodoStatus,
+  searchTodos,
 } from "../db/operation";
 
 export default () => {
@@ -13,15 +14,20 @@ export default () => {
   const [sortOrder, setSortOrder] = useState<"priority" | "deadline" | null>(
     null
   ); // 添加排序状态
+  const getAllTodosFromDB = async () => {
+    const todos = await getAllTodos();
+    console.log(todos);
+    setTodos(todos);
+  };
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      const todos = await getAllTodos();
-      console.log(todos);
-      setTodos(todos);
-    };
-    fetchTodos();
+    getAllTodosFromDB();
   }, []);
+
+  const searchTodo = async (keyword: string) => {
+    const todos = await searchTodos(keyword);
+    setTodos(todos);
+  };
 
   const addTodo = (newTodo: TodoItem) => {
     if (newTodo.title.trim() === "") return;
@@ -86,5 +92,6 @@ export default () => {
     addTodo,
     deleteTodo,
     toggleComplete,
+    searchTodo,
   };
 };

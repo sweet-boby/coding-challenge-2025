@@ -71,3 +71,13 @@ export async function clearCompletedTodos(): Promise<void> {
   const idsToDelete = completedTodos.map((todo) => todo.id!);
   await db.todoList.bulkDelete(idsToDelete);
 }
+
+// 对todolist进行模糊搜索
+export async function searchTodos(query: string): Promise<TodoItem[]> {
+  return await db.todoList
+    .where("title")
+    .startsWithIgnoreCase(query)
+    .or("description")
+    .startsWithIgnoreCase(query)
+    .toArray();
+}
