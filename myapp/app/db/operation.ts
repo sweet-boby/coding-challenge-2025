@@ -72,12 +72,23 @@ export async function clearCompletedTodos(): Promise<void> {
   await db.todoList.bulkDelete(idsToDelete);
 }
 
-// 对todolist进行模糊搜索
-export async function searchTodos(query: string): Promise<TodoItem[]> {
-  return await db.todoList
-    .where("title")
-    .startsWithIgnoreCase(query)
-    .or("description")
-    .startsWithIgnoreCase(query)
-    .toArray();
+// 在多字段中查找
+export async function searchTodos(searchTerm: string) {
+  try {
+    const regex = new RegExp(searchTerm, "i"); // 'i' 表示不区分大小写
+    const fields: ("title" | "description")[] = ["title", "description"];
+    const allItems = await db.todoList.toArray();
+
+    const results = allItems.filter((item) => {
+      return fields.some((field: "title" | "description") => {
+        const value = item[field];
+        return value && regex.test(value);
+      });
+    });
+
+    return results;
+  } catch (error) {
+    console.error("多字段查找失败:", error);
+    return [];
+  }
 }
